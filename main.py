@@ -21,21 +21,24 @@ async def on_shutdown(dp):
 subscription_check_button = KeyboardButton('Проверить подписку')
 subscription_check_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add(subscription_check_button)
 
-not_subscribed_message = f'Привет!\n' \
-                         f'Меня зовут Женя Сегеда, я занимаюсь маркетингом с 2014 года. А ты скорее всего хочешь получить обещанный в рекламе стикер-пак для сторис. Сделать это можно в два шага:\n' \
-                         f'1. Подпишись на мой телеграм канал о маркетинге JenyaSegeda\n' \
-                         f'2. Нажми кнопку "Проверить подписку" в боте.'
+start_message = f'Привет!\n' \
+                f'Меня зовут Женя Сегеда, я занимаюсь маркетингом с 2014 года. А ты скорее всего хочешь получить обещанный в рекламе стикер-пак для сторис. Сделать это можно в два шага:\n' \
+                f'1. Подпишись на мой телеграм канал о маркетинге <a href="https://t.me/JenyaSegeda">JenyaSegeda</a>\n' \
+                f'2. Нажми кнопку "Проверить подписку" в боте.' \
 
 subscribed_message = f'Стикеры для сторис можно скачать по ссылке: \n' \
                      f'https://drive.google.com/drive/u/0/folders/15P5t8LhC_98iZpfbzmv61AL0AAxLSUnA\n' \
                      f'Если вы никогда раньше не пользовались стикерами в сторис, смотрите инструкцию на моем сайте: https://jenyasegeda.com/stikers '
 
+not_subscribed_message = f'Вы не подписаны на канал. Чтобы получить стикер-пак подпишитесь на канал <a href="https://t.me/JenyaSegeda">JenyaSegeda</a>'
+
 @dp.message_handler(commands=['start', 'help'])
 async def start(message: Message):
     await bot.send_message(
         chat_id=message.from_user.id,
-        text=not_subscribed_message,
-        reply_markup=subscription_check_keyboard
+        text=start_message,
+        reply_markup=subscription_check_keyboard,
+        parse_mode=types.ParseMode.HTML
     )
 
 @dp.message_handler()
@@ -46,13 +49,15 @@ async def check_subscription(message: Message):
             await bot.send_message(
                 chat_id=message.from_user.id,
                 text=subscribed_message,
-                reply_markup=subscription_check_keyboard
+                reply_markup=subscription_check_keyboard,
+                parse_mode=types.ParseMode.HTML
             )
         else:
             await bot.send_message(
                 chat_id=message.from_user.id,
                 text=not_subscribed_message,
-                reply_markup=subscription_check_keyboard
+                reply_markup=subscription_check_keyboard,
+                parse_mode=types.ParseMode.HTML
             )
 
 
